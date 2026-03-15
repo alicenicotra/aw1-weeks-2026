@@ -1,0 +1,89 @@
+/* Data Access Object (DAO) per accedere alle Q&A */
+/* Versione iniziale dall'esercizio di settimana 03 */
+
+import sqlite from "sqlite3";
+import {Question, Answer} from "./QAModels";
+
+const db = new sqlite.Database("questions.sqlite", (err) => {
+  if (err) throw err;
+});
+
+/** DOMANDE **/
+
+// recuperare tutte le Question
+export const listQuestions = () => {
+  // write something clever
+}
+
+// recuperare una Question dato il suo id
+export const getQuestion = (id) => {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT question.*, user.email FROM question JOIN user ON question.authorId = user.id WHERE question.id = ?";
+    db.get(sql, [id], (err, row) => {
+      if(err)
+        reject(err);
+      else if(row !== undefined)
+        resolve(new Question(row.id, row.text, row.email, row.authorId, row.date));
+      else
+        resolve("Question not available, check the id.");
+    });
+  });
+}
+
+// aggiungere una nuova Question di un autore esistente
+export const addQuestion = (question) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO question(text, authorId, date) VALUES (?,?,?)";
+    db.run(sql, [question.text, question.author.id, question.date], function(err) {
+      if(err) reject (err);
+      else resolve(this.lastID);
+    });
+  });
+}
+
+/** RISPOSTE **/
+
+// prendere tutte le risposte da una Question
+export const getAnswers = (questionId) => {
+  return new Promise ((resolve, reject) => {
+    const sql = "SELECT answer.*, user.email FROM answer JOIN user ON answer.authorId = user.id WHERE answer.questionId = ?";
+    db.all(sql, [questionId], (err, rows) => {
+      if (err) {
+        reject(err);
+      } else {
+        const answers = rows.map((ans) => new Answer(ans.id, ans.text, ans.email, ans.authorId, ans.date, ans.score));
+        resolve(answers);
+      }
+    });
+  });
+}
+
+// aggiungere una nuova risposta di un autore esistente a una Question esistente
+export const addAnswer = (answer, questionId) => {
+  return new Promise((resolve, reject) => {
+    const sql = "INSERT INTO answer(text, authorId, date, score, questionId) VALUES (?, ?, ?, ?, ?)";
+    db.run(sql, [answer.text, answer.author.id, answer.date, answer.score, questionId], function (err) {
+      if (err)
+        reject(err);
+      else
+        resolve(this.lastID);
+    });
+  });
+}
+
+// aggiornare una risposta esistente
+export const updateAnswer = (answer) => {
+  // write something clever
+}
+
+// votare una risposta esistente, con up = +1 e down = -1
+export const voteAnswer = (answerId, value) => {
+  return new Promise((resolve, reject) => {
+    const sql = "UPDATE answer SET score = score + ? WHERE id = ?";
+    const delta = value === "up" ? 1 : -1;
+    db.run(sql, [delta, answerId], function(err) {
+      if(err) reject(err);
+      else resolve(this.changes);
+    });
+  });
+}
