@@ -7,6 +7,10 @@ function Answer (text, userId, date, score=0) {
   this.userId = userId;
   this.date = dayjs(date);
   this.score = score;
+
+  this.toString = () => {
+    return `${this.userId} replied '${this.text}' on ${this.date.format("YYYY-MM-DD")} with a score of ${this.score}`;
+  }
 }
 
 function Question (text, userId, date) {
@@ -20,17 +24,26 @@ function Question (text, userId, date) {
   }
 
   this.getAnswers = (userId) => {
-    const foundAnswers = [];
+    /*const foundAnswers = [];
     for (const ans of this.answers) {
       if(ans.userId === userId)
         foundAnswers.push(ans);
     }
-    return foundAnswers;
+    return foundAnswers;*/
+    return this.answers.filter(ans => ans.userId === userId);
   }
 
-  this.afterDate = (date) => {}
-  this.listByDate = () => {}
-  this.listByScore = () => {}
+  this.afterDate = (date) => {
+    return this.answers.filter(ans => ans.date.isAfter(dayjs(date)));
+  }
+
+  this.listByDate = () => {
+    return [...this.answers].sort((a,b) => (a.date.isAfter(b.date)) ? 1 : -1);
+  }
+
+  this.listByScore = () => {
+    return [...this.answers].sort((a,b) => b.score - a.score);
+  }
 }
 
 /* USERS
@@ -55,4 +68,8 @@ question.addAnswer(fourthAnswer);
 const answerByPiero = question.getAnswers(3);
 
 console.log(question);
-console.log(answerByPiero);
+console.log("\nLe risposte di Piero: " + answerByPiero);
+
+console.log("\nRisposte per data: " + question.listByDate());
+console.log("\nRisposte per score: " + question.listByScore());
+console.log("\nRisposte dopo il 24/02: " + question.afterDate("2026-02-24"));

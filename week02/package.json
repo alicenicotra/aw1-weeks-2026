@@ -1,15 +1,15 @@
 {
-  "name": "esercizio1",
+  "name": "week02",
   "version": "1.0.0",
-  "description": "Primo esercizio con dayjs",
+  "description": "",
   "license": "ISC",
-  "author": "Luigi De Russis",
+  "author": "",
   "type": "module",
-  "main": "exercise.js",
+  "main": "db_test.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "dayjs": "^1.11.19"
+    "sqlite3": "^5.1.7"
   }
 }
