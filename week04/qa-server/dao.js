@@ -2,7 +2,7 @@
 /* Versione iniziale dall'esercizio di settimana 03 */
 
 import sqlite from "sqlite3";
-import {Question, Answer} from "./QAModels";
+import {Question, Answer} from "./QAModels.js";
 
 const db = new sqlite.Database("questions.sqlite", (err) => {
   if (err) throw err;
@@ -12,7 +12,17 @@ const db = new sqlite.Database("questions.sqlite", (err) => {
 
 // recuperare tutte le Question
 export const listQuestions = () => {
-  // write something clever
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT question.*, user.email FROM question JOIN user ON question.authorId = user.id";
+    db.all(sql, [], (err, rows) => {
+      if(err)
+        reject(err);
+      else {
+        const questions = rows.map((row) => new Question(row.id, row.text, row.email, row.authorId, row.date));
+        resolve(questions);
+      }
+    });
+  });
 }
 
 // recuperare una Question dato il suo id
@@ -25,7 +35,7 @@ export const getQuestion = (id) => {
       else if(row !== undefined)
         resolve(new Question(row.id, row.text, row.email, row.authorId, row.date));
       else
-        resolve("Question not available, check the id.");
+        resolve({"error": "Question not available, check the id."});
     });
   });
 }
