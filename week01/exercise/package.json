@@ -1,0 +1,15 @@
+{
+  "name": "esercizio1",
+  "version": "1.0.0",
+  "description": "Esercizio 1",
+  "license": "ISC",
+  "author": "Alice Nicotra",
+  "type": "module",
+  "main": "exercise.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.19"
+  }
+}
