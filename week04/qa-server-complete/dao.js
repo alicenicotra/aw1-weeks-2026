@@ -2,7 +2,7 @@
 /* Versione iniziale dall'esercizio di settimana 03 */
 
 import sqlite from "sqlite3";
-import {Question, Answer} from "./QAModels.js.js";
+import {Question, Answer} from "./QAModels.js";
 
 const db = new sqlite.Database("questions.sqlite", (err) => {
   if (err) throw err;
@@ -35,7 +35,7 @@ export const getQuestion = (id) => {
       else if(row !== undefined)
         resolve(new Question(row.id, row.text, row.email, row.authorId, row.date));
       else
-        resolve({"error": {"error": "Question not available, check the id."}});
+        resolve({error: "Question not available, check the id."});
     });
   });
 }
@@ -83,7 +83,15 @@ export const addAnswer = (answer, questionId) => {
 
 // aggiornare una risposta esistente
 export const updateAnswer = (answer) => {
-  // write something clever
+  return new Promise((resolve, reject) => {
+    let sql = "UPDATE answer SET text = ?, authorId = ?, date = ?, score = ? WHERE id = ?"
+    db.run(sql, [answer.text, answer.author.id, answer.date, answer.score, answer.id], function (err) {
+      if (err)
+        reject(err);
+      else
+        resolve(this.lastID);
+    });
+  });
 }
 
 // votare una risposta esistente, con up = +1 e down = -1
