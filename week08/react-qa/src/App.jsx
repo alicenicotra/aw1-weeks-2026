@@ -19,12 +19,41 @@ function App() {
   const [question, setQuestion] = useState(myQuestion);
   const [answers, setAnswers] = useState(myQuestion.answers);
 
+  const voteUp = (answerId) => {
+    setAnswers(oldAnswers => {
+      return oldAnswers.map(ans => {
+        if(ans.id === answerId)
+          return new Answer(ans.id, ans.text, ans.author.email, ans.author.id, ans.date, ans.score + 1);
+        else return ans;
+      });
+    });
+  }
+
+  const addAnswer = (answer) => {
+    setAnswers(oldAnswers => {
+      // temporaneo
+      const newId = Math.max(...oldAnswers.map(ans => ans.id)) + 1;
+      const newAnswer = new Answer(newId, answer.text, answer.email, undefined, answer.date);
+      return [...oldAnswers, newAnswer];
+    });
+  }
+
+  const updateAnswer = (answer) => {
+    setAnswers(oldAnswers => {
+      return oldAnswers.map(ans => {
+        if(ans.id === answer.id)
+          return new Answer(answer.id, answer.text, answer.email, ans.author.id, answer.date, ans.score);
+        else return ans;
+      });
+    });
+  }
+
   return (
     <>
       <NavHeader questionNum={question.id} />
       <Container fluid className="mt-3">
         <QuestionDescription question={question} />
-        <Answers answers={answers} setAnswers={setAnswers} />
+        <Answers answers={answers} voteUp={voteUp} addAnswer={addAnswer} editAnswer={updateAnswer}/>
       </Container>
     </>
   )
