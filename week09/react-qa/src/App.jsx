@@ -7,8 +7,6 @@ import Answers from "./components/Answers";
 import { Routes, Route } from "react-router";
 import DefaultLayout from "./components/DefaultLayout.jsx";
 import { AnswerForm, EditAnswerForm } from "./components/AnswerForm.jsx";
-import Questions from "./components/Questions.jsx";
-import NotFound from "./components/NotFound.jsx";
 
 const myQuestion = new Question(1, "Is Javascript better than Python?", "luigi.derussis@polito.it", 1, "2026-03-30");
 
@@ -72,15 +70,12 @@ function App() {
   return (
     <Routes>
       <Route element={ <DefaultLayout />}>
-        <Route path="/" element={ <Questions questions={questions}/> } />
         <Route path="/questions/:questionId" element={ <QuestionDescription questions={questions} /> }>
           <Route index element={ <Answers answers={answers} voteUp={voteUp} addAnswer={addAnswer} editAnswer={updateAnswer} deleteAnswer={deleteAnswer}/> } ></Route>
           <Route path="answers/new" element={<AnswerForm addAnswer={addAnswer} />}></Route>
           {/*<Route path="answers/:answerId/edit" element={<EditAnswerForm answers={answers} editAnswer={updateAnswer}/>}></Route>*/}
           <Route path="answers/:answerId/edit" element={<EditAnswerForm editAnswer={updateAnswer}/>}></Route>
-          <Route path="*" element={ <NotFound /> } />
         </Route>
-        
       </Route>
   </Routes>
   )

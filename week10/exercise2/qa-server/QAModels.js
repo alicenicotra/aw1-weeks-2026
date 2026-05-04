@@ -14,10 +14,6 @@ function Answer(id, text, authorEmail, authorId, date, score = 0) {
   this.author = {email: authorEmail, id: authorId};
   this.score = score;
   this.date = dayjs(date);
-
-  this.serialize = () => {
-    return {id: this.id, text: this.text, author: this.author, date: this.date.format("YYYY-MM-DD"), score: this.score};
-  }
 }
 
 export {Question, Answer};
