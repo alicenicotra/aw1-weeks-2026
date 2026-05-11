@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { Button, Container, Navbar } from 'react-bootstrap';
 import { Link } from "react-router";
 
-import { useState, useEffect } from "react";
-
 function NavHeader() {
   const [darkMode, setDarkMode] = useState(false);
 

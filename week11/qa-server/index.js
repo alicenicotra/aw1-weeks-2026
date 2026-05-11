@@ -21,7 +21,7 @@ app.use(morgan("dev"));
 passport.use(new LocalStrategy(async function verify(username, password, cb) {
   const user = await getUser(username, password);
   if(!user)
-    return cb(null, false, "Incorrect username or password."); // error message in the WWW-Authenticated header of the response
+    return cb(null, false, "Incorrect username or password."); // error message in the WWW-Authenticate header of the response
     
   return cb(null, user);
 }));
@@ -49,8 +49,10 @@ app.use(session({
 app.use(passport.authenticate("session"));
 
 const corsOptions = {
-  origin: 'http://localhost:5173',
-  optionsSuccessState: 200
+  origin: "http://localhost:5173",
+  optionsSuccessState: 200,
+  exposedHeaders: ['WWW-Authenticate'],
+  credentials: true
 };
 
 app.use(cors(corsOptions));
